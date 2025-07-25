@@ -1,0 +1,15 @@
+E:\MLProjects\Boston\BostonHousing\BostonHousing\bin\Debug\net9.0\BostonHousing.exe
+E:\MLProjects\Boston\BostonHousing\BostonHousing\bin\Debug\net9.0\BostonHousing.deps.json
+E:\MLProjects\Boston\BostonHousing\BostonHousing\bin\Debug\net9.0\BostonHousing.runtimeconfig.json
+E:\MLProjects\Boston\BostonHousing\BostonHousing\bin\Debug\net9.0\BostonHousing.dll
+E:\MLProjects\Boston\BostonHousing\BostonHousing\bin\Debug\net9.0\BostonHousing.pdb
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\BostonHousing.GeneratedMSBuildEditorConfig.editorconfig
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\BostonHousing.AssemblyInfoInputs.cache
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\BostonHousing.AssemblyInfo.cs
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\BostonHousing.csproj.CoreCompileInputs.cache
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\BostonHousing.dll
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\refint\BostonHousing.dll
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\BostonHousing.pdb
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\BostonHousing.genruntimeconfig.cache
+E:\MLProjects\Boston\BostonHousing\BostonHousing\obj\Debug\net9.0\ref\BostonHousing.dll
+E:\MLProjects\Boston\BostonHousing\BostonHousing\bin\Debug\net9.0\housing.csv
