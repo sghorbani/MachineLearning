@@ -1,205 +1,110 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import os
-import numpy as np
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# ---------------------------------------
-#  تنظیمات اصلی: نرخ یادگیری و تکرارها
-# ---------------------------------------
-ALPHA      = 0.01   # learning rate α
-ITERATIONS = 400    # number of gradient descent iterations
+import seaborn as sns
 
-# -------------------------------
-# 1) FEATURE NORMALIZATION
-# -------------------------------
-def feature_normalize(X):
-    """
-    Normalize features:
-      $X_{\text{norm}} = \frac{X - \mu}{\sigma}$
-    Returns:
-      X_norm, mu, sigma
-    """
-    mu    = np.mean(X, axis=0)
-    sigma = np.std(X,  axis=0, ddof=0)
-    X_norm = (X - mu) / sigma
-    return X_norm, mu, sigma
+#, r2_score3
 
-# -------------------------------
-# 2) COMPUTE COST
-# -------------------------------
-def compute_cost(X, y, theta):
-    """
-    Compute cost function:
-      $J(\theta) = \frac{1}{2m}\,(X\theta - y)^T (X\theta - y)$
-    """
-    m   = len(y)
-    err = X.dot(theta) - y
-    return (1.0 / (2*m)) * np.dot(err, err)
+columns = ["mpg", "cylinders", "displacement", "horsepower", "weight",
+           "acceleration", "model_year", "origin", "car_name"]
 
-# -------------------------------
-# 3) GRADIENT DESCENT
-# -------------------------------
-def gradient_descent(X, y, theta, alpha, num_iters):
-    """
-    Performs gradient descent to learn θ:
-      $\theta := \theta - \alpha\,\frac{1}{m}\,X^T (X\theta - y)$
-    Returns:
-      final theta, history of J(theta)
-    """
-    m = len(y)
-    J_history = np.zeros(num_iters)
+df = pd.read_csv('auto-mpg.data',
+                 delim_whitespace=True,
+                 names=columns,
+                 na_values='?',
+                 quotechar='"')
 
-    for i in range(num_iters):
-        error = X.dot(theta) - y
-        grad  = (1.0/m) * X.T.dot(error)
-        theta = theta - alpha * grad
-        J_history[i] = compute_cost(X, y, theta)
+print("******Missing values:")
+print(df.isnull().sum())
 
-    return theta, J_history
+print("******datafarame info:")
+print(df.info())
 
-# -------------------------------
-# 4) RUN ONE EXPERIMENT
-# -------------------------------
-def run_experiment(X_raw, y, alpha=ALPHA, num_iters=ITERATIONS, title=""):
-    """
-    1) Normalize features
-    2) Add bias term
-    3) Run gradient descent
-    4) Print results
-    Returns:
-      theta, mu, sigma, J_history
-    """
-    X_norm, mu, sigma = feature_normalize(X_raw)
-    m = len(y)
+  
 
-    # design matrix با ستون بایاس
-    X = np.concatenate([np.ones((m,1)), X_norm], axis=1)
+print("******horsepower missed value before:")
+print(df['horsepower'].isnull().sum())   
 
-    theta_init = np.zeros(X.shape[1])
-    theta, J_history = gradient_descent(X, y, theta_init, alpha, num_iters)
+median_hp = df['horsepower'].median() 
+df.fillna({'horsepower': median_hp}, inplace=True)
 
-    # چاپ نتایج
-    print(f"--- Results {title} ---")
-    print("θ =", theta)
-    print(f"Final cost = {J_history[-1]:.4f}")
-    print("mu =", mu)
-    print("sigma =", sigma, "\n")
+print("******horsepower missed value after:")
+print(df['horsepower'].isnull().sum())  # باید صفر شود
 
-    return theta, mu, sigma, J_history
+print("******df.shape:")
+print(f"rows:{df.shape[0]} columns: {df.shape[1]}")
 
-# -------------------------------
-# 5) HELPER: اضافه کردن باکس متن زیر نمودار
-# -------------------------------
-def add_text_box(ax, theta, J_history, mu, sigma, alpha, num_iters):
-    txt = (
-        f"θ = {np.array2string(theta, precision=4, separator=', ')}\n"
-        f"$J_{{final}}$ = {J_history[-1]:.4f}\n"
-        f"μ = {np.array2string(mu, precision=4, separator=', ')}\n"
-        f"σ = {np.array2string(sigma, precision=4, separator=', ')}\n"
-        f"α = {alpha}, iter = {num_iters}"
-    )
-    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    # قرار دادن باکس در زیر هر subplot
-    ax.text(0.5, -0.35, txt,
-            transform=ax.transAxes,
-            fontsize=8,
-            va='top', ha='center',
-            bbox=props)
+print("******df.head:")
+print(df.head())
+ 
+df.to_csv('auto-mpg-filled.csv', index=False)
 
-# -------------------------------
-# 6) MAIN FUNCTION
-# -------------------------------
-def main():
-    # یافتن مسیر فایل housing.csv در کنار این اسکریپت
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    csv_path   = os.path.join(script_dir, "housing.csv")
 
-    # خواندن داده‌ها (whitespace-delimited، بدون هدر)
-    df   = pd.read_csv(csv_path, delim_whitespace=True, header=None)
-    data = df.values
 
-    # جداکردن X و y
-    X_all   = data[:, :-1]       # همه ویژگی‌ها
-    X_lstat = data[:, -2:-1]     # فقط ویژگی lstat
-    y       = data[:, -1]        # متغیر هدف medv
+# One-Hot Encoding برای origin
+df = pd.get_dummies(df, columns=['origin'], prefix='origin')
 
-    # --- Experiment 1: only lstat ---
-    theta_lstat, mu_lstat, sigma_lstat, Jhist_lstat = run_experiment(
-        X_lstat, y,
-        alpha=ALPHA,
-        num_iters=ITERATIONS,
-        title="(Only lstat)"
-    )
+# ساده‌سازی car_name: استخراج برند و One-Hot
+df['brand'] = df['car_name'].str.split().str[0]
+popular_brands = df['brand'].value_counts().nlargest(10).index
+df['brand'] = df['brand'].apply(lambda x: x if x in popular_brands else 'other')
+df = pd.get_dummies(df, columns=['brand'], prefix='brand')
 
-    # --- Experiment 2: all features ---
-    theta_all, mu_all, sigma_all, Jhist_all = run_experiment(
-        X_all, y,
-        alpha=ALPHA,
-        num_iters=ITERATIONS,
-        title="(All features)"
-    )
+# اگر cylinders رو بخوای one-hot کنی:
+df = pd.get_dummies(df, columns=['cylinders'], prefix='cyl')
 
-    # ===============================
-    # 7) رسم هم‌زمان 4 نمودار (2×2)
-    # ===============================
-    fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+# حذف car name اصلی
+df = df.drop('car_name', axis=1)
+ 
+X = df.drop(['mpg'], axis=1)  # تمام ستون‌ها به‌جز mpg
+y = df['mpg']
+X = df.drop('mpg', axis=1)
+ 
 
-    # 7.1) Convergence (Only lstat)
-    ax = axs[0, 0]
-    ax.plot(np.arange(1, ITERATIONS+1), Jhist_lstat, 'b-', lw=2)
-    ax.set_title("Convergence (Only lstat)")
-    # برچسب y به صورت افقی و خواناتر
-    ax.set_ylabel("Cost $J(\\theta)$", rotation=0, labelpad=30)
-    ax.yaxis.set_label_coords(-0.15, 0.5)
-    ax.set_xlabel("Iteration")
-    ax.grid(True)
-    add_text_box(ax, theta_lstat, Jhist_lstat, mu_lstat, sigma_lstat, ALPHA, ITERATIONS)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+print("Train shape:", X_train.shape, "Test shape:", X_test.shape)
 
-    # 7.2) Convergence (All features)
-    ax = axs[0, 1]
-    ax.plot(np.arange(1, ITERATIONS+1), Jhist_all, 'g-', lw=2)
-    ax.set_title("Convergence (All features)")
-    ax.set_ylabel("Cost $J(\\theta)$", rotation=0, labelpad=30)
-    ax.yaxis.set_label_coords(-0.15, 0.5)
-    ax.set_xlabel("Iteration")
-    ax.grid(True)
-    add_text_box(ax, theta_all, Jhist_all, mu_all, sigma_all, ALPHA, ITERATIONS)
 
-    # 7.3) Scatter + Fit (lstat)
-    ax = axs[1, 0]
-    ax.scatter(X_lstat, y, c='blue', marker='x', label='Training data')
-    x_vals = np.linspace(X_lstat.min(), X_lstat.max(), 100)
-    x_norm = (x_vals - mu_lstat[0]) / sigma_lstat[0]
-    X_line = np.column_stack([np.ones_like(x_norm), x_norm])
-    y_line = X_line.dot(theta_lstat)
-    ax.plot(x_vals, y_line, 'r-', lw=2, label='Linear fit')
-    ax.set_title('Fit on Single Feature (lstat)')
-    ax.set_xlabel('lstat')
-    ax.set_ylabel('medv')
-    ax.legend()
-    ax.grid(True) 
+model = LinearRegression()
+model.fit(X_train, y_train)
 
-    # 7.4) Actual vs Predicted (All features)
-    ax = axs[1, 1]
-    X_all_norm = (X_all - mu_all) / sigma_all
-    X_design   = np.concatenate([np.ones((len(y),1)), X_all_norm], axis=1)
-    y_pred     = X_design.dot(theta_all)
-    ax.scatter(y, y_pred, c='purple', alpha=0.6, label='Predicted vs Actual')
-    lims = [min(y.min(), y_pred.min()), max(y.max(), y_pred.max())]
-    ax.plot(lims, lims, 'k--', lw=2, label='y = x')
-    ax.set_title('Actual vs Predicted (All features)')
-    ax.set_xlabel('Actual medv')
-    ax.set_ylabel('Predicted medv')
-    ax.legend()
-    ax.grid(True) 
+y_pred = model.predict(X_test)
 
-    # تنظیم فاصله‌ها و نمایش
-    fig.tight_layout(pad=2.0)
-    plt.show()
+print("Model coefficients:", model.coef_)
+print("Intercept:", model.intercept_)
 
-if __name__ == "__main__":
-    main()
+
+mae = mean_absolute_error(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+r2 = r2_score(y_test, y_pred)
+
+print(f"MAE: {mae:.2f}")
+print(f"RMSE: {rmse:.2f}")
+print(f"R2 score: {r2:.2f}")
+
+residuals = y_test - y_pred
+
+# رسم نمودار پسماندها
+plt.figure(figsize=(8, 5))
+plt.scatter(y_pred, residuals, alpha=0.7)
+plt.axhline(0, color='red', linestyle='dashed')
+plt.xlabel('Predicted MPG')
+plt.ylabel('Residuals (Actual - Predicted)')
+plt.title('Residuals vs. Predicted MPG')
+plt.show()
+
+
+plt.figure(figsize=(8, 4))
+sns.kdeplot(residuals, fill=True, color='green', alpha=0.8)
+plt.xlabel('Residual')
+plt.ylabel('Density')
+plt.title('Distribution of Residuals (Kernel Density Plot)')
+plt.show()
