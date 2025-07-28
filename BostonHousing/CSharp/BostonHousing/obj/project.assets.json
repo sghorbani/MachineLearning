@@ -8,23 +8,23 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\R.Gh\\.nuget\\packages\\": {},
+    "H:\\.nuget": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\MLProjects\\Boston\\BostonHousing\\BostonHousing\\BostonHousing.csproj",
+      "projectUniqueName": "H:\\ML\\MachineLearning\\BostonHousing\\CSharp\\BostonHousing\\BostonHousing.csproj",
       "projectName": "BostonHousing",
-      "projectPath": "E:\\MLProjects\\Boston\\BostonHousing\\BostonHousing\\BostonHousing.csproj",
-      "packagesPath": "C:\\Users\\R.Gh\\.nuget\\packages\\",
-      "outputPath": "E:\\MLProjects\\Boston\\BostonHousing\\BostonHousing\\obj\\",
+      "projectPath": "H:\\ML\\MachineLearning\\BostonHousing\\CSharp\\BostonHousing\\BostonHousing.csproj",
+      "packagesPath": "H:\\.nuget",
+      "outputPath": "H:\\ML\\MachineLearning\\BostonHousing\\CSharp\\BostonHousing\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\R.Gh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\991335.ENTEKHAB\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -34,7 +34,8 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {},
-        "https://devops.entekhabgroup.com/tfs/entekhabgroup/_packaging/EntekhabFeed/nuget/v3/index.json": {}
+        "https://devops.entekhabgroup.com/tfs/entekhabgroup/_packaging/EntekhabFeed/nuget/v3/index.json": {},
+        "https://www.myget.org/F/elsa-2/api/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
